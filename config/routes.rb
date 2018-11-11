@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users
 
-  root 'transactions#index'
-  get 'transactions/show'
-  get 'transactions/create'
+  devise_scope :user do
+    root 'devise/sessions#new'
+  end
+
+  get '/transactions', to: 'transactions#index'
 end
