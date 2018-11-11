@@ -11,7 +11,7 @@
   <div id="form">
       <div class="logo">
         <h1 class="text-center head">TYC管理システム</h1>
-        <h2 class="text-center head">Web版ログイン画面</h2>
+        <h2 class="text-center head">ログイン</h2>
       </div>
       <div class="form-item">
         <p class="formLabel">メールアドレス</p>
@@ -20,7 +20,7 @@
       <div class="form-item">
         <p class="formLabel">パスワード</p>
         <%= f.password_field :password, autocomplete: "current-password" %>
-        <p><a href="#" ><small>パスワードを忘れた場合はこちら</small></a></p>
+        <p class="pull-left"><a href="/users/password/forget"><small>パスワードを忘れた場合はこちら</small></a></p>
       </div>
       <div class="form-item">
         <p class="pull-left"><a href="/users/sign_up"><small>新規ユーザ登録</small></a></p>

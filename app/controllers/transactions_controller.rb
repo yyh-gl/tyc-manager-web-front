@@ -13,4 +13,8 @@ class TransactionsController < ApplicationController
 
   def create
   end
+
+  # deviseのコントローラいじるのがめんどかったのでtransactionsコントローラにパスワード忘れたときようの処理を追加
+  def forget
+  end
 end
