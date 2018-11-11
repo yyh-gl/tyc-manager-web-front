@@ -33,6 +33,9 @@ gem 'dotenv-rails', require: 'dotenv/rails-now'
 # 入力フォームの動的追加
 gem 'nested_form_fields'
 
+# Devise 導入
+gem 'devise'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
