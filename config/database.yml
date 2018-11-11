@@ -8,11 +8,11 @@ default: &default
 
 development:
   <<: *default
-  database: tyc_manager_web_front_development
+  database: tyc_manager_development
 
 test:
   <<: *default
-  database: tyc_manager_web_front_test
+  database: tyc_manager_test
 
 production:
   adapter: mysql2

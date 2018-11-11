@@ -1,3 +1,7 @@
 Rails.application.routes.draw do
-  root 'logins#index'
+  devise_for :users
+
+  root 'transactions#index'
+  get 'transactions/show'
+  get 'transactions/create'
 end
