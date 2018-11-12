@@ -6,28 +6,29 @@
 <script src="https://code.jquery.com/jquery-2.1.0.min.js" ></script>
 <body>
 <div id="formWrapper">
-
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div id="form">
-      <div class="logo">
-        <h1 class="text-center head">TYC管理システム</h1>
-        <h2 class="text-center head">ログイン</h2>
-      </div>
-      <div class="form-item">
-        <p class="formLabel">メールアドレス</p>
-        <%= f.email_field :email, class: "form-style", autofocus: true, autocomplete: "email" %>
-      </div>
-      <div class="form-item">
-        <p class="formLabel">パスワード</p>
-        <%= f.password_field :password, class: "form-style", autocomplete: "current-password" %>
-        <p class="pull-left"><a href="/users/password/forget"><small>パスワードを忘れた場合はこちら</small></a></p>
-      </div>
-      <div class="form-item">
-        <p class="pull-left"><a href="/users/sign_up"><small>新規ユーザ登録</small></a></p>
-        <!-- TODO: 本来はRailsの form_for で生成すべきだが、cssがうまく反映できず妥協 -->
-        <input type="submit" class="login pull-right" value="ログイン">
+    <div class="logo">
+      <h1 class="text-center head">TYC管理システム</h1>
+      <h2 class="text-center head">ログイン</h2>
+    </div>
+    <div class="form-item">
+      <p class="formLabel">メールアドレス</p>
+      <%= f.email_field :email, class: "form-style", autofocus: true, autocomplete: "email" %>
+    </div>
+    <div class="form-item">
+      <p class="formLabel">パスワード</p>
+      <%= f.password_field :password, class: "form-style", autocomplete: "current-password" %>
+      <p class="pull-left"><a href="/users/password/forget"><small>パスワードを忘れた場合はこちら</small></a></p>
+    </div>
+    <div class="form-item">
+      <p class="pull-left"><a href="/users/sign_up"><small>新規ユーザ登録</small></a></p>
+      <!-- TODO: 本来はRailsの form_for で生成すべきだが、cssがうまく反映できず妥協 -->
+      <input type="submit" class="login pull-right" value="ログイン">
         <div class="clear-fix"></div>
-      </div>
+    </div>
+    <p class="notice"><small><%= notice %></small></p>
+    <p class="alert"><small><%= alert %></small></p>
   </div>
   <% end %>
 </div>
@@ -213,5 +214,13 @@
 
   input[type="submit"].login:focus {
     outline: none;
+  }
+
+  .notice {
+    color: #df434f;
+  }
+
+  .alert {
+    color: #df434f;
   }
 </style>
