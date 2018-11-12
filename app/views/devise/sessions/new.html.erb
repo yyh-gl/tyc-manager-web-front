@@ -15,11 +15,11 @@
       </div>
       <div class="form-item">
         <p class="formLabel">メールアドレス</p>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+        <%= f.email_field :email, class: "form-style", autofocus: true, autocomplete: "email" %>
       </div>
       <div class="form-item">
         <p class="formLabel">パスワード</p>
-        <%= f.password_field :password, autocomplete: "current-password" %>
+        <%= f.password_field :password, class: "form-style", autocomplete: "current-password" %>
         <p class="pull-left"><a href="/users/password/forget"><small>パスワードを忘れた場合はこちら</small></a></p>
       </div>
       <div class="form-item">
@@ -141,7 +141,7 @@
     transition: all .2s ease;
   }
 
-  input#user_email {
+  input.form-style {
     color: #8a8a8a;
     display: block;
     width: 90%;
@@ -160,32 +160,7 @@
     letter-spacing: .8px;
   }
 
-  input#user_password {
-    color: #8a8a8a;
-    display: block;
-    width: 90%;
-    height: 44px;
-    padding: 5px 5%;
-    border: 1px solid #ccc;
-    -moz-border-radius: 27px;
-    -webkit-border-radius: 27px;
-    border-radius: 27px;
-    -moz-background-clip: padding;
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    background-color: #fff;
-    font-family: 'HelveticaNeue', 'Arial', sans-serif;
-    font-size: 105%;
-    letter-spacing: .8px;
-  }
-
-  div.form-item #user_email:focus {
-    outline: none;
-    border: 1px solid #58bff6;
-    color: #58bff6;
-  }
-
-  div.form-item #user_password:focus {
+  .form-style:focus {
     outline: none;
     border: 1px solid #58bff6;
     color: #58bff6;
