@@ -10,8 +10,15 @@ class TransactionsController < ApplicationController
   end
 
   def create
-    new_transaction = Transaction.new(transaction_params)
-    new_transaction.save
+    ActiveRecord::Base.transaction do
+      # 送信主の取引履歴を追加
+      new_from_transaction = Transaction.new(uid: current_user[:uid], tyc: -params[:tyc].to_i, reason: params[:reason])
+      new_from_transaction.save
+
+      # 送信先の取引履歴を追加
+      new_to_transaction = Transaction.new(transaction_params)
+      new_to_transaction.save
+    end
   end
 
   # deviseのコントローラいじるのがめんどかったのでtransactionsコントローラにパスワード忘れたときようの処理を追加
