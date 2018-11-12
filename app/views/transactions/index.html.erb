@@ -4,7 +4,7 @@
 <h1>こんにちは、<%= @username %>さん</h1>
 <p>ユーザー用ページです。</p>
 
-<%= form_for(@transaction, html: { class: 'form-horizontal' }) do |f| %>
+<%= form_with model: @transaction do |f| %>
   <table class="table table-striped table-bordered table-hover">
     <tbody>
     <tr>
@@ -12,13 +12,10 @@
       <th>取引額</th>
       <th>取引理由</th>
     </tr>
-    <%= f.nested_fields_for :transactions, wrapper_tag: :tr do |q| %>
-      <td><%= q.text_field :uid, class: 'form-control' %></td>
-      <td><%= q.number_field :tyc, class: 'form-control' %></td>
-      <td><%= q.text_field :reason, class: 'form-control' %></td>
-      <td><%= q.remove_nested_fields_link 'Delete', class: 'btn btn-danger', role: 'button' %></td>
-    <% end %>
+      <td><%= f.text_field :uid, class: 'form-control' %></td>
+      <td><%= f.number_field :tyc, class: 'form-control' %></td>
+    <td><%= f.text_field :reason, class: 'form-control' %></td>
     </tbody>
+    <%= f.submit %>
   </table>
-  <%= f.add_nested_fields_link :roomtypes, 'Add new', class: 'btn btn-primary', role: 'button' %>
 <% end %>
