@@ -32,6 +32,7 @@ gem 'dotenv-rails', require: 'dotenv/rails-now'
 
 # 入力フォームの動的追加
 gem 'nested_form_fields'
+gem 'jquery-rails'
 
 # Devise 導入
 gem 'devise'
