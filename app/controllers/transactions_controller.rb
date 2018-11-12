@@ -1,6 +1,7 @@
 class TransactionsController < ApplicationController
 
   def index
+    @uids = User.all.map { |user| user[:uid] }
     if current_user
       @username = current_user.name
     else

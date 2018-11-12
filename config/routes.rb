@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   end
 
   resources :transactions, only: [:index, :create]
-  
+
   # deviseのコントローラいじるのがめんどかったのでtransactionsコントローラにパスワード忘れたときようの処理を追加
   get '/users/password/forget', to: 'transactions#forget'
 end
