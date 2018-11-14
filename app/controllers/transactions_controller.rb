@@ -13,11 +13,16 @@ class TransactionsController < ApplicationController
     ActiveRecord::Base.transaction do
       # 送信主の取引履歴を追加
       new_from_transaction = Transaction.new(uid: current_user[:uid], tyc: -params[:tyc].to_i, reason: params[:reason])
-      new_from_transaction.save
-
       # 送信先の取引履歴を追加
       new_to_transaction = Transaction.new(transaction_params)
-      new_to_transaction.save
+
+      if new_from_transaction.save && new_to_transaction.save
+        session[:notice] = 'TYC譲渡が完了しました'
+        redirect_to action: :index
+      else
+        session[:alert] = 'TYC譲渡に失敗しました'
+        redirect_to action: :index
+      end
     end
   end
 
