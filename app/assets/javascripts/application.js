@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require nested_form_fields
+//= require data-confirm-modal
 //= require rails-ujs
 //= require activestorage
 //= require turbolinks
