@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get 'transactions/create'
   devise_for :users
 
   devise_scope :user do

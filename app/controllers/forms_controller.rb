@@ -1,25 +1,34 @@
 class FormsController < ApplicationController
 
   def index
-    @form = Form.new
-    @form.parameters.build if @form.parameters.none?
-    @target_uids = User.all.map { |user| user[:uid] }
     if current_user
       @username = current_user.name
     else
-      @username = 'hoge'
+      @username = 'ゲスト'
     end
+
+    @form = Form.new
+    @form.parameters.build if @form.parameters.none?
+
+    @target_uids = User.all.map { |user| user[:uid] }
   end
 
   def create
+    session[:notice] = params[:form][:parameters_attributes]
+    params[:form][:parameters_attributes].each do |parameters|
+      puts '----------'
+      pp parameters
+    end
     puts '----------'
-    puts '----------'
-    puts '----------'
+
+    redirect_to action: :index
   end
 
   # deviseのコントローラいじるのがめんどかったのでtransactionsコントローラにパスワード忘れたときようの処理を追加
   def forget
   end
+
+  private
 
   def form_params
     params.require(:form).permit(
