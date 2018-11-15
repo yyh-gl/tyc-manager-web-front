@@ -8,13 +8,14 @@ class FormsController < ApplicationController
     end
 
     @form = Form.new
-    @form.parameters.build if @form.parameters.none?
+    @form.parameters.build
 
     @target_uids = User.all.map { |user| user[:uid] }
   end
 
   def create
     session[:notice] = params[:form][:parameters_attributes]
+    @transactions = params[:form][:parameters_attributes]
     params[:form][:parameters_attributes].each do |parameters|
       puts '----------'
       pp parameters
