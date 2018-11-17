@@ -5,9 +5,8 @@ Rails.application.routes.draw do
     root 'devise/sessions#new'
   end
 
-  resources :transactions, only: [:index, :create]
   resources :forms, only: [:index, :create]
 
   # deviseのコントローラいじるのがめんどかったのでtransactionsコントローラにパスワード忘れたときようの処理を追加
-  get '/users/password/forget', to: 'transactions#forget'
+  get '/users/password/forget', to: 'forms#forget'
 end

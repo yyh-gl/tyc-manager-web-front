@@ -9,8 +9,8 @@
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div id="form">
     <div class="logo">
-      <h1 class="text-center head">TYC管理システム</h1>
-      <h2 class="text-center head">ログイン</h2>
+      <%= image_tag('logo.png', :size => '128x128', :alt => 'アイコン') %>
+      <h2 class="text-center head">TYC管理システム</h2>
     </div>
     <div class="form-item">
       <p class="formLabel">メールアドレス</p>
