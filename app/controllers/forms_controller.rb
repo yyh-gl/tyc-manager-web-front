@@ -11,6 +11,8 @@ class FormsController < ApplicationController
     @form.parameters.build
 
     @target_uids = User.all.map { |user| user[:uid] }
+
+    @row = 0
   end
 
   def create

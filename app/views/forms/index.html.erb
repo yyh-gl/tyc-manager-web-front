@@ -39,7 +39,7 @@
       <td><%= q.select :uid, @target_uids %></td>
       <td><%= q.number_field :tyc, class: 'form-control sum-target' %></td>
       <td><%= q.text_field :reason, class: 'form-control' %></td>
-      <td><%= q.remove_nested_fields_link '削除', class: 'btn btn-danger', role: 'button', onclick: "reset();" %></td>
+      <td><%= q.remove_nested_fields_link '削除', class: 'btn btn-danger', role: 'button' %></td>
     <% end %>
     <tr>
       <td></td>
@@ -50,35 +50,39 @@
     <tr>
       <td><span><b>合計 :</b></span></td>
       <td><b><span id="total_sum_value"></span>円</b></td>
+      <td><%= f.submit '取引実行', class: 'btn btn-primary', data: { confirm: 'hoge' } %></td>
     </tr>
     </tbody>
   </table>
-  <%= f.submit '取引実行', class: 'btn btn-primary', data: { confirm: 'hoge' } %>
 <% end %>
 
 </body>
 </html>
 
 <script>
-  let calculated_total_sum = 0;
+  let removeNumberList = [];
+
   $("#tyc-table").on('input', '.sum-target', function () {
-    calculated_total_sum = 0;
+    let count = 0;
+    let calculated_total_sum = 0;
 
     $("#tyc-table .sum-target").each(function () {
-      var get_textbox_value = $(this).val();
-      if ($.isNumeric(get_textbox_value)) {
-        calculated_total_sum += parseFloat(get_textbox_value);
+      var textbox_value = $(this).val();
+      if ($.isNumeric(textbox_value) && removeNumberList.indexOf(count) == -1) {
+        calculated_total_sum += parseFloat(textbox_value);
+      } else {
+        calculated_total_sum -= parseFloat(textbox_value);
       }
+      count++;
     });
     $("#total_sum_value").html(calculated_total_sum);
   });
 
-  function reset() {
-    calculated_total_sum = 0;
-    // $("#tyc-table .sum-target").each(function () {
-    //   $(this).val(0);
-    //   alert($(this));
-    // });
-    $("#total_sum_value").html(0);
-  }
+
+  // フォーム削除時に合計TYCから削除した分を引くための処理
+  $("#tyc-table").on('click', '.remove_nested_fields_link', function () {
+    let index = this.getAttribute("data-delete-association-field-name").match(/\[\d+\]/)[0].replace(/\[|\]/g, '');
+    removeNumberList.push(index);
+  });
+
 </script>
