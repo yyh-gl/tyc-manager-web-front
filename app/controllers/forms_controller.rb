@@ -16,14 +16,34 @@ class FormsController < ApplicationController
   end
 
   def create
-    session[:notice] = params[:form][:parameters_attributes]
-    @transactions = params[:form][:parameters_attributes]
-    params[:form][:parameters_attributes].each do |parameters|
-      puts '----------'
-      pp parameters
-    end
-    puts '----------'
+    ActiveRecord::Base.transaction do
+      params[:form][:parameters_attributes].each do |parameter|
+        next if parameter[1][:_destroy].present?
 
+        # 送信主の取引履歴を追加
+        new_from_transaction = Transaction.new(uid: current_user[:uid],
+                                               tyc: -parameter[1][:tyc].to_i,
+                                               reason: parameter[1][:reason])
+        new_from_transaction.save!
+
+        # 送信先の取引履歴を追加
+        new_to_transaction = Transaction.new(uid: parameter[1][:uid],
+                                             tyc: parameter[1][:tyc].to_i,
+                                             reason: parameter[1][:reason])
+        new_to_transaction.save!
+      end
+    end
+
+    session[:notice] = '取引が正常に完了しました。'
+    redirect_to action: :index
+
+  rescue => error
+    puts '----------------'
+    puts error
+    puts '----------------'
+
+    session[:error] = '取引が完了しませんでした。以下のエラーを参考に入力項目を修正してください。'
+    session[:error_detail] = error
     redirect_to action: :index
   end
 
