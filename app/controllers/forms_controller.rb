@@ -11,8 +11,6 @@ class FormsController < ApplicationController
     @form.parameters.build
 
     @target_uids = User.all.map { |user| user[:uid] }
-
-    render template: 'forms/hoge'
   end
 
   def create
@@ -34,7 +32,7 @@ class FormsController < ApplicationController
       end
     end
 
-    session[:notice] = '取引が正常に完了しました。'
+    session[:success_message] = '取引が正常に完了しました。'
     redirect_to action: :index
 
   rescue => error
