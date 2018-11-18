@@ -36,10 +36,10 @@
         <tbody>
         <thead class="thead-dark">
         <tr>
-          <th>送信先</th>
+          <th>取引相手</th>
           <th>取引額</th>
           <th>取引理由</th>
-          <th>入力フォーム操作</th>
+          <th class="text-center">入力フォーム操作</th>
         </tr>
         </thead>
         <%= f.nested_fields_for :parameters, wrapper_tag: :tr do |q| %>
@@ -147,6 +147,8 @@
   a:hover {
     color: #aaa;
   }
+
+  th.text-center { text-align: center; }
 
   .span-title {
     font-size: 25px;
