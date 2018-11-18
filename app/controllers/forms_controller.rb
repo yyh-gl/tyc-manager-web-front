@@ -11,10 +11,10 @@ class FormsController < ApplicationController
     @form.parameters.build
 
     @target_uids = User.all.map { |user| user[:uid] }
+    @target_uids.delete(current_user[:uid])
   end
 
   def create
-    target_uids = []
     ActiveRecord::Base.transaction do
       params[:form][:parameters_attributes].each do |parameter|
         next if parameter[1][:_destroy].present?
@@ -30,15 +30,27 @@ class FormsController < ApplicationController
                                              tyc: parameter[1][:tyc].to_i,
                                              reason: parameter[1][:reason])
         new_to_transaction.save!
-
-        target_uids << parameter[1][:uid]
       end
     end
 
+    # 取引ログをCSVに出力
+    params[:form][:parameters_attributes].each do |parameter|
+      next if parameter[1][:_destroy].present?
+
+      unless Rails.env != 'development'
+        # Development環境以外ではSlackで通知する（取引内容）
+        # TransactionMailer.notice(request.headers[:uid], request.headers[:target], tyc).deliver_later
+        send_slack_message(parameter[1][:uid], parameter[1][:tyc], parameter[1][:reason])
+      end
+
+      make_transaction_backup(current_user[:uid],
+                              parameter[1][:uid],
+                              parameter[1][:tyc].to_i,
+                              parameter[1][:reason])
+    end
+
     unless Rails.env == 'development'
-      # Development環境以外ではSlackで通知する
-      # TransactionMailer.notice(request.headers[:uid], request.headers[:target], tyc).deliver_later
-      send_slack_message(target_uids)
+      # Development環境以外ではSlackで通知する（総流通量）
       check_tyc_distribution_amount
     end
 
@@ -68,25 +80,24 @@ class FormsController < ApplicationController
   end
 
   # TODO: メッセージ部分を分離したい
-  def send_slack_message(target_uids)
-    target_uids.each do |target_uid|
-      if current_user[:uid] == ENV['PROF_MIKI']
-        from = '三木先生'
-      elsif current_user[:uid] == ENV['LADY_MASAKI']
-        from = '正木さん'
-      else
-        from = User.find_by_email(current_user[:uid]).name
-      end
+  def send_slack_message(target_uid, tyc, reason)
+    if current_user[:uid] == ENV['PROF_MIKI']
+      from = '三木先生'
+    elsif current_user[:uid] == ENV['LADY_MASAKI']
+      from = '正木さん'
+    else
+      from = User.find_by_email(current_user[:uid]).name
+    end
 
-      if target_uid == ENV['PROF_MIKI']
-        to = '三木先生'
-      elsif target_uid == ENV['LADY_MASAKI']
-        to = '正木さん'
-      else
-        to = User.find_by_email(target_uid).name
-      end
+    if target_uid == ENV['PROF_MIKI']
+      to = '三木先生'
+    elsif target_uid == ENV['LADY_MASAKI']
+      to = '正木さん'
+    else
+      to = User.find_by_email(target_uid).name
+    end
 
-      message = <<"MESSAGE"
+    message = <<"MESSAGE"
 研究室の皆様
 
 TYC管理秘書のF.R.I.D.A.Yです。
@@ -97,14 +108,14 @@ TYC管理秘書のF.R.I.D.A.Yです。
 [取引内容]
 送り主： #{from}
 送り先： #{to}
-金額　： #{@tyc} TYC
+金額　： #{tyc} TYC
+理由　： #{reason}
 -----
 
 以上です。
 MESSAGE
-      slack_notifier = Slack::Notifier.new(ENV['SLACK_WEBHOOK_URL'])
-      slack_notifier.ping(message)
-    end
+    slack_notifier = Slack::Notifier.new(ENV['SLACK_WEBHOOK_URL'])
+    slack_notifier.ping(message)
   end
 
   # 取引が行われるたびに取引および取引後の"全員分"の残TYCをCSVに出力
