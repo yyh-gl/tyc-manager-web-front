@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   require 'csv'
 
   # TYC総流通量
-  TYC_DISTRIBUTION_AMOUNT = 1_000_001
+  TYC_DISTRIBUTION_AMOUNT = 5_000_000
 
   # ホワイトリスト
   PROFESSOR = ENV['PROFESSOR'][1..-2].split(', ')
