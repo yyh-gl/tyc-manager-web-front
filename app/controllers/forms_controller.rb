@@ -21,14 +21,12 @@ class FormsController < ApplicationController
 
         # 送信主の取引履歴を追加
         new_from_transaction = Transaction.new(uid: current_user[:uid],
-                                               tyc: -parameter[1][:tyc].to_i,
-                                               reason: parameter[1][:reason])
+                                               tyc: -parameter[1][:tyc].to_i)
         new_from_transaction.save!
 
         # 送信先の取引履歴を追加
         new_to_transaction = Transaction.new(uid: parameter[1][:uid],
-                                             tyc: parameter[1][:tyc].to_i,
-                                             reason: parameter[1][:reason])
+                                             tyc: parameter[1][:tyc].to_i)
         new_to_transaction.save!
       end
     end
@@ -40,13 +38,12 @@ class FormsController < ApplicationController
       unless Rails.env != 'development'
         # Development環境以外ではSlackで通知する（取引内容）
         # TransactionMailer.notice(request.headers[:uid], request.headers[:target], tyc).deliver_later
-        send_slack_message(parameter[1][:uid], parameter[1][:tyc], parameter[1][:reason])
+        send_slack_message(parameter[1][:uid], parameter[1][:tyc]) if ENV['NOTIFICATION'] == 'on'
       end
 
       make_transaction_backup(current_user[:uid],
                               parameter[1][:uid],
-                              parameter[1][:tyc].to_i,
-                              parameter[1][:reason])
+                              parameter[1][:tyc].to_i)
     end
 
     unless Rails.env == 'development'
@@ -80,7 +77,7 @@ class FormsController < ApplicationController
   end
 
   # TODO: メッセージ部分を分離したい
-  def send_slack_message(target_uid, tyc, reason)
+  def send_slack_message(target_uid, tyc)
     if current_user[:uid] == ENV['PROF_MIKI']
       from = '三木先生'
     elsif current_user[:uid] == ENV['LADY_MASAKI']
@@ -109,7 +106,6 @@ TYC管理秘書のF.R.I.D.A.Yです。
 送り主： #{from}
 送り先： #{to}
 金額　： #{tyc} TYC
-理由　： #{reason}
 -----
 
 以上です。
@@ -120,12 +116,12 @@ MESSAGE
 
   # 取引が行われるたびに取引および取引後の"全員分"の残TYCをCSVに出力
   # -> CSVファイル： /log/transaction_log.csv
-  def make_transaction_backup(from, to, tyc, reason)
+  def make_transaction_backup(from, to, tyc)
     transactions = [Time.now]
     transactions << Transaction.group(:uid).sum(:tyc).sort_by { |a| a[1] }.reverse
     CSV.open(TRANSACTION_LOG_PATH, 'a', encoding: 'Shift_JIS:UTF-8') do |file|
       file << transactions.flatten
-      file << ['', 'FROM', from, 'TO', to, 'TYC', tyc, 'REASON', reason]
+      file << ['', 'FROM', from, 'TO', to, 'TYC', tyc]
     end
   end
 

@@ -45,7 +45,7 @@
         <%= f.nested_fields_for :parameters, wrapper_tag: :tr do |q| %>
           <td align="center"><%= q.select :uid, @target_uids, {}, class: 'form-control' %></td>
           <td align="center"><%= q.number_field :tyc, class: 'form-control sum-target' %></td>
-          <td align="center"><%= q.text_field :reason, class: 'form-control' %></td>
+          <td align="center"><%= q.text_field :reason, class: 'form-control', value: '近日中に対応', disabled: 'disabled' %></td>
           <td align="center"><%= q.remove_nested_fields_link '　削除　', class: 'btn btn-danger', role: 'button' %></td>
         <% end %>
         <tr>
