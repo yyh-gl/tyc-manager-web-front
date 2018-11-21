@@ -35,16 +35,9 @@ class FormsController < ApplicationController
     params[:form][:parameters_attributes].each do |parameter|
       next if parameter[1][:_destroy].present?
 
-      puts 'a----------'
-      puts Rails.env
-      puts 'a----------'
-
-      unless Rails.env != 'development'
+      unless Rails.env == 'development'
         # Development環境以外ではSlackで通知する（取引内容）
         # TransactionMailer.notice(request.headers[:uid], request.headers[:target], tyc).deliver_later
-        puts '----------'
-        puts '----------'
-        puts '----------'
         send_slack_message(parameter[1][:uid], parameter[1][:tyc]) if ENV['NOTIFICATION'] == 'on'
       end
 
