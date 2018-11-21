@@ -38,6 +38,9 @@ class FormsController < ApplicationController
       unless Rails.env != 'development'
         # Development環境以外ではSlackで通知する（取引内容）
         # TransactionMailer.notice(request.headers[:uid], request.headers[:target], tyc).deliver_later
+        puts '----------'
+        puts '----------'
+        puts '----------'
         send_slack_message(parameter[1][:uid], parameter[1][:tyc]) if ENV['NOTIFICATION'] == 'on'
       end
 
