@@ -10,6 +10,7 @@
       <span><%= image_tag('logo.png', :size => '128x128', :alt => 'アイコン') %></span>
       <span class="span-title">Web版 TYC管理システム</span>
       <p>おはようございます、<%= @username %> さん</p>
+      <p>あなたの所持TYC： <%= @possession_tyc.to_s(:delimited) %></p>
     </div>
 
     <% if session[:success_message].present? %>
