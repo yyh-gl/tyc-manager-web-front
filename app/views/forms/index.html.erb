@@ -11,6 +11,7 @@
       <span class="span-title">Web版 TYC管理システム</span>
       <p>おはようございます、<%= @username %> さん</p>
       <p>あなたの所持TYC： <%= @possession_tyc.to_s(:delimited) %></p>
+      <p>取引後は <%= link_to 'ログアウト', destroy_user_session_path, method: :delete %> してください</p>
     </div>
 
     <% if session[:success_message].present? %>
