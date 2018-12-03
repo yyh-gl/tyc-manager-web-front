@@ -12,22 +12,29 @@ class FormsController < ApplicationController
 
     @target_uids = User.all.map { |user| user[:uid] }
     @target_uids.delete(current_user[:uid])
+
+    @possession_tyc = Transaction.where(uid: current_user[:uid]).sum(:tyc)
   end
 
   def create
+    possession_tyc = Transaction.where(uid: current_user[:uid]).sum(:tyc)
+
     ActiveRecord::Base.transaction do
       params[:form][:parameters_attributes].each do |parameter|
         next if parameter[1][:_destroy].present?
 
+        tyc = parameter[1][:tyc].to_i
+        raise("取引額には 1 〜 #{possession_tyc} の間の数値を入力してください。") unless tyc.positive? && tyc <= possession_tyc
+
         # 送信主の取引履歴を追加
         new_from_transaction = Transaction.new(uid: current_user[:uid],
-                                               tyc: -parameter[1][:tyc].to_i,
+                                               tyc: -tyc,
                                                reason: parameter[1][:reason])
         new_from_transaction.save!
 
         # 送信先の取引履歴を追加
         new_to_transaction = Transaction.new(uid: parameter[1][:uid],
-                                             tyc: parameter[1][:tyc].to_i,
+                                             tyc: tyc,
                                              reason: parameter[1][:reason])
         new_to_transaction.save!
       end
