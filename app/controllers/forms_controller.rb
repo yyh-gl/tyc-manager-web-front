@@ -17,12 +17,13 @@ class FormsController < ApplicationController
   end
 
   def create
+    possession_tyc = Transaction.where(uid: current_user[:uid]).sum(:tyc)
+
     ActiveRecord::Base.transaction do
       params[:form][:parameters_attributes].each do |parameter|
         next if parameter[1][:_destroy].present?
 
         tyc = parameter[1][:tyc].to_i
-        possession_tyc = Transaction.where(uid: current_user[:uid]).sum(:tyc)
         raise("取引額には 1 〜 #{possession_tyc} の間の数値を入力してください。") unless tyc.positive? && tyc <= possession_tyc
 
         # 送信主の取引履歴を追加
